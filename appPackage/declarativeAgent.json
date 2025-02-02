@@ -10,12 +10,6 @@
             "sites": [
                 {
                     "url": "https://pnp.github.io/script-samples"
-                },
-                {
-                    "url": "https://pnp.github.io/powershell"
-                },
-                {
-                    "url": "https://pnp.github.io/cli-microsoft365"
                 }
             ]
         },
