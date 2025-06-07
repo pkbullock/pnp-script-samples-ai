@@ -1,0 +1,41 @@
+{
+  "Script": "inputs/script5.ps1",
+  "Prompt": "Please produce a short descriptive paragraph around 150 words long, what the PowerShell script is, anticipate its purpose. The response should include a Title, Description, Assumptions, and Dependencies.  \\n Here is the PowerShell script to use for the descripion: $m365Status = m365 status\r\nif ($m365Status -match \"Logged Out\") {\r\n    m365 login\r\n}\r\n\r\n$dateTime = (Get-Date).toString(\"dd-MM-yyyy\")\r\n$invocation = (Get-Variable MyInvocation).Value\r\n$directorypath = Split-Path $invocation.MyCommand.Path\r\n$fileName = \"m365OwnersNotMembers-\" + $dateTime + \".csv\"\r\n$OutPutView = $directorypath + \"\\\" + $fileName\r\n# Array to Hold Result - PSObjects\r\n$m365GroupCollection = @()\r\n#Write-host $\"$ownerName not part of member in $siteUrl\";\r\n$m365Sites = m365 spo site list --query \"[?Template == 'GROUP#0' && Template != 'RedirectSite#0'].{GroupId:GroupId, Url:Url, Title:Title}\" --output json | ConvertFrom-Json\r\n$m365Sites | ForEach-Object {   \r\n    $groupId = $_.GroupId -replace \"/Guid\\((.*)\\)/\",'$1';\r\n    $siteUrl = $_.Url;\r\n    $siteName = $_.Title\r\n    #if owner is not part of m365 group member\r\n    (m365 entra m365group user list --role Owner --groupId $groupId --output json | ConvertFrom-Json) | foreach-object {\r\n        $owner = $_;\r\n        $ownerDisplayName = $owner.displayName\r\n        if (!(m365 entra m365group user list --role Member --groupId $groupId --query \"[?displayName == '$ownerDisplayName']\" --output json | ConvertFrom-Json)) {\r\n            $ExportVw = New-Object PSObject\r\n            $ExportVw | Add-Member -MemberType NoteProperty -name \"Site Name\" -value $siteName\r\n            $ExportVw | Add-Member -MemberType NoteProperty -name \"Site URL\" -value $siteUrl\r\n            $ExportVw | Add-Member -MemberType NoteProperty -name \"Owner Name\" -value $ownerDisplayName\r\n            $m365GroupCollection += $ExportVw\r\n            m365 entra m365group user add --role Owner --groupId $groupId --userName $owner.userPrincipalName\r\n            Write-host \"$ownerDisplayName has been added as member in $siteUrl\";\r\n        }\r\n    }\r\n}\r\n# Export the result array to CSV file\r\n$m365GroupCollection | sort-object \"Site Name\" | Export-CSV $OutPutView -Force -NoTypeInformation\r\n\r\n#Disconnect SharePoint online connection\r\nm365 logout",
+  "SystemPrompt": "You are a helpful analyser of PowerShell scripts that will be used to produce title and description of what the script intended function. Intended to give readers of the PowerShell script, a friendly message to describe what the script is about. The PowerShell scripts can be based on the Microsoft services such as Microsoft 365, SharePoint, Azure, Power Platform, Teams, Security and Compliance. The reponses should be in English and in JSON Format using this example: { \"Title\": \"Title of the Script\", \"Purpose\": \"Purpose of the Script\", \"LongDescription\": \"Describe what Powershell Script does\", \"Dependencies\": [\"Connect-PnPOnline\", \"Get-PnPListItem\"],  \"Assumptions\": [{ \"SourceSitePartURLRequired\": true, \"TenantFilterOptional\": false }]}.   If you don't know the answer, just say that you don't know, don't try to make up an answer",
+  "LocalModelResults": [
+    {
+      "Model": "phi3.5:3.8b-mini-instruct-q4_0",
+      "ModelResultDescription": "{\n  \"Title\": \"Add Owners to Microsoft 365 Groups Script\",\n  \"Purpose\": \"The script ensures that the owners listed in a specific site collection are members of their respective Microsoft 365 groups. If they're not, it adds them.\",\n  \"LongDescription\": \"This PowerShell script checks for each owner within a specified SharePoint Online Site Collection whether or not these individuals already belong to an associated M365 group based on the site title and URL provided in their user profile data. It identifies owners who are missing from those groups, adds them as members using Microsoft Graph API calls.\",\n  \"Dependencies\": [\"Connect-PnPOnline\", \"Get-M365GroupUserList\"],\n  \"Assumptions\": [\n    {\n      \"SourceSitePartURLRequired\": true,\n      \"TenantFilterOptional\": false\n    }\n  ]\n}\n",
+      "ModelResultObject": {
+        "Title": "Add Owners to Microsoft 365 Groups Script",
+        "Purpose": "The script ensures that the owners listed in a specific site collection are members of their respective Microsoft 365 groups. If they're not, it adds them.",
+        "LongDescription": "This PowerShell script checks for each owner within a specified SharePoint Online Site Collection whether or not these individuals already belong to an associated M365 group based on the site title and URL provided in their user profile data. It identifies owners who are missing from those groups, adds them as members using Microsoft Graph API calls.",
+        "Dependencies": [
+          "Connect-PnPOnline",
+          "Get-M365GroupUserList"
+        ],
+        "Assumptions": [
+          {
+            "SourceSitePartURLRequired": true,
+            "TenantFilterOptional": false
+          }
+        ]
+      },
+      "ExecutionTimeInSeconds": 26.0236307,
+      "ModelResponse": {
+        "model": "phi3.5:3.8b-mini-instruct-q4_0",
+        "created_at": "2024-10-27T11:47:51.7104059Z",
+        "response": "{\n  \"Title\": \"Add Owners to Microsoft 365 Groups Script\",\n  \"Purpose\": \"The script ensures that the owners listed in a specific site collection are members of their respective Microsoft 365 groups. If they're not, it adds them.\",\n  \"LongDescription\": \"This PowerShell script checks for each owner within a specified SharePoint Online Site Collection whether or not these individuals already belong to an associated M365 group based on the site title and URL provided in their user profile data. It identifies owners who are missing from those groups, adds them as members using Microsoft Graph API calls.\",\n  \"Dependencies\": [\"Connect-PnPOnline\", \"Get-M365GroupUserList\"],\n  \"Assumptions\": [\n    {\n      \"SourceSitePartURLRequired\": true,\n      \"TenantFilterOptional\": false\n    }\n  ]\n}\n",
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 24005181500,
+        "load_duration": 4469000,
+        "prompt_eval_count": 931,
+        "prompt_eval_duration": 15376959000,
+        "eval_count": 206,
+        "eval_duration": 8622538000
+      }
+    }
+  ],
+  "Processed": false
+}

@@ -1,0 +1,41 @@
+{
+  "Script": ".\\inputs\\LinksInPage.ps1",
+  "Prompt": "Please produce a short descriptive paragraph around 150 words long, what the PowerShell script is, anticipate its purpose. The response should include a Title, Description, Assumptions, and Dependencies.  \\n Here is the PowerShell script to use for the descripion: # Each site in this list will have the script run against\r\n$csv_SiteList = \"sites-test.csv\"\r\n$csv_siteheaders = 'Url'\r\n\r\n# Date used in the file creation\r\n$date = Get-Date\r\n$date = $date.ToString(\"yyyymmddhhss\")\r\n\r\n# filename by using the date\r\n$file_name = $date + 'LinkMatches.csv'\r\n\r\n# Path to create the output fil\r\n$creation_path = Get-Location\r\n\r\n# The site pages list that this script will run against\r\n$List = \"SitePages\"\r\n\r\n# Headers for the output csv\r\n$headers = \"Site Title|Page Title|Page Url|Href Tag\"\r\n\r\n# new line character\r\n$ofs = \"`n\"\r\n\r\n# delimiter to use\r\n$delim = '|'\r\n\r\n# regex used to match the href tags that are embeded in the canvas page content\r\n$regex ='<a\\s+(?:[^>]*?\\s+)?href=([\"])(.*?)\\1>'\r\n\r\n# create object of all the sites\r\n$sites = Import-Csv -Path $csv_SiteList -Header $csv_siteheaders\r\n\r\n#variable for the header\r\n$csv_outputheader = $headers + $ofs\r\n\r\n#complete file path\r\n$csv_path = Join-Path $creation_path $file_name\r\n\r\n# create output csv\r\nNew-Item -Path $creation_path -Name $file_name -ItemType File -Value $csv_outputheader\r\n\r\n# itterate around each site from the csv\r\nforeach($site in $sites)\r\n{\r\n    # make the connection, get ome site information and create object that contains all the site pages\r\n    $connection = Connect-PnPOnline -Url $site.Url -Interactive\r\n    $pnpsite = Get-PnPWeb -Connection $connection\r\n    $site_title = $pnpsite.Title\r\n    $pages = (Get-PnPListItem -List $List -Fields \"CanvasContent1\", \"Title\" -Connection $connection).FieldValues\r\n\r\n    # itterate around each page in the stie to get the information from each page that will be used to build up the row and also conduct\r\n    # the check to see if the canvas content has any href tags embeded\r\n    foreach($page in $pages)\r\n    {\r\n        $page_title = $page.Get_Item(\"Title\")\r\n        $fileref = $page.Get_Item(\"FileRef\")\r\n        $canvascontent = $page.Get_Item(\"CanvasContent1\")\r\n        # check if the canvas has content \r\n        if ($canvascontent.Length -gt 0) \r\n        {\r\n            # hash table of the results that match the href regular expression\r\n            $hrefmatches = ($canvascontent | select-string -pattern $regex -AllMatches).Matches.Value\r\n\r\n            # itterate around each regular expression match and write it out into the output csv that is pipe delimited \r\n            foreach($hrefmatch in $hrefmatches)\r\n            {\r\n                $row = $site_title + $delim + $page_title + $delim + $fileref + $delim + $hrefmatch\r\n                Add-Content -Path $csv_path -Value $row\r\n            }\r\n        }\r\n    }\r\n    Disconnect-PnPOnline\r\n}",
+  "SystemPrompt": "You are a helpful analyser of PowerShell scripts that will be used to produce title and description of what the script intended function. Intended to give readers of the PowerShell script, a friendly message to describe what the script is about. The PowerShell scripts can be based on the Microsoft services such as Microsoft 365, SharePoint, Azure, Power Platform, Teams, Security and Compliance. The reponses should be in English and in JSON Format using this example: { \"Title\": \"Title of the Script\", \"Purpose\": \"Purpose of the Script\", \"LongDescription\": \"Describe what Powershell Script does\", \"Dependencies\": [\"Connect-PnPOnline\", \"Get-PnPListItem\"],  \"Assumptions\": [{ \"SourceSitePartURLRequired\": true, \"TenantFilterOptional\": false }]}.   If you don't know the answer, just say that you don't know, don't try to make up an answer",
+  "LocalModelResults": [
+    {
+      "Model": "phi3.5:3.8b-mini-instruct-q4_0",
+      "ModelResultDescription": "{\n  \"Title\": \"Extract Href Tags from SharePoint Site Pages\",\n  \n  \"Description\": \"This PowerShell script iterates through a list of site URLs provided in 'sites-test.csv'. For each site, it connects to the Microsoft 365 environment and retrieves all pages within specified lists (e.g., 'SitePages'). It then scans these page contents for embedded href tags using regular expressions.\",\n  \n  \"LongDescription\": \"The script reads a list of SharePoint sites from a CSV file, connects to each site via PowerShell's PnP Online module and extracts all pages within the specified lists. For every page content that contains an anchor tag ('<a>'), it captures both 'Title' field value (from Page metadata) along with any href tags present in its body text using regex matching, then writes these details into a new CSV file named after today’s date.\",\n  \n  \"Dependencies\": [\"Connect-PnPOnline\", \"Get-PnPListItem\"],\n  \n  \"Assumptions\": [\n    {\n      \"SourceSitePartURLRequired\": true,\n      \"TenantFilterOptional\": false\n    }\n  ]\n}\n",
+      "ModelResultObject": {
+        "Title": "Extract Href Tags from SharePoint Site Pages",
+        "Description": "This PowerShell script iterates through a list of site URLs provided in 'sites-test.csv'. For each site, it connects to the Microsoft 365 environment and retrieves all pages within specified lists (e.g., 'SitePages'). It then scans these page contents for embedded href tags using regular expressions.",
+        "LongDescription": "The script reads a list of SharePoint sites from a CSV file, connects to each site via PowerShell's PnP Online module and extracts all pages within the specified lists. For every page content that contains an anchor tag ('<a>'), it captures both 'Title' field value (from Page metadata) along with any href tags present in its body text using regex matching, then writes these details into a new CSV file named after today’s date.",
+        "Dependencies": [
+          "Connect-PnPOnline",
+          "Get-PnPListItem"
+        ],
+        "Assumptions": [
+          {
+            "SourceSitePartURLRequired": true,
+            "TenantFilterOptional": false
+          }
+        ]
+      },
+      "ExecutionTimeInSeconds": 43.8622622,
+      "ModelResponse": {
+        "model": "phi3.5:3.8b-mini-instruct-q4_0",
+        "created_at": "2024-12-03T23:14:38.1599744Z",
+        "response": "{\n  \"Title\": \"Extract Href Tags from SharePoint Site Pages\",\n  \n  \"Description\": \"This PowerShell script iterates through a list of site URLs provided in 'sites-test.csv'. For each site, it connects to the Microsoft 365 environment and retrieves all pages within specified lists (e.g., 'SitePages'). It then scans these page contents for embedded href tags using regular expressions.\",\n  \n  \"LongDescription\": \"The script reads a list of SharePoint sites from a CSV file, connects to each site via PowerShell's PnP Online module and extracts all pages within the specified lists. For every page content that contains an anchor tag ('<a>'), it captures both 'Title' field value (from Page metadata) along with any href tags present in its body text using regex matching, then writes these details into a new CSV file named after today’s date.\",\n  \n  \"Dependencies\": [\"Connect-PnPOnline\", \"Get-PnPListItem\"],\n  \n  \"Assumptions\": [\n    {\n      \"SourceSitePartURLRequired\": true,\n      \"TenantFilterOptional\": false\n    }\n  ]\n}\n",
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 41780018200,
+        "load_duration": 4186520000,
+        "prompt_eval_count": 1105,
+        "prompt_eval_duration": 25441000000,
+        "eval_count": 269,
+        "eval_duration": 12142000000
+      }
+    }
+  ],
+  "Processed": false
+}

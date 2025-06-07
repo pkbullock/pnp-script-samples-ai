@@ -1,0 +1,43 @@
+{
+  "Script": "inputs/script4.ps1",
+  "Prompt": "Please produce a short descriptive paragraph around 150 words long, what the PowerShell script is, anticipate its purpose. The response should include a Title, Description, Assumptions, and Dependencies.  \\n Here is the PowerShell script to use for the descripion: \r\n$AdminCenterURL=\"https://contoso-admin.sharepoint.com/\"# Connect to SharePoint Online admin center\r\nConnect-PnPOnline -Url $AdminCenterURL -Interactive\r\n$dateTime = (Get-Date).toString(\"dd-MM-yyyy\")\r\n$invocation = (Get-Variable MyInvocation).Value\r\n$directorypath = Split-Path $invocation.MyCommand.Path\r\n$fileName = \"m365OwnersNotMembers-\" + $dateTime + \".csv\"\r\n$OutPutView = $directorypath + \"\\\" + $fileName\r\n# Array to Hold Result - PSObjects\r\n$m365GroupCollection = @()\r\n#Write-host $\"$ownerName not part of member in $siteUrl\";\r\n$m365Sites = Get-PnPTenantSite -Detailed | Where-Object { ($_.Template -eq 'GROUP#0') -and $_.Template -ne 'RedirectSite#0' }\r\n$m365Sites | ForEach-Object {   \r\n    $groupId = $_.GroupId;\r\n    $siteUrl = $_.Url;\r\n    $siteName = $_.Title\r\n    #if owner is not part of m365 group member\r\n    (Get-PnPMicrosoft365GroupOwner -Identity $groupId -ErrorAction Ignore) | foreach-object {\r\n        $owner = $_;\r\n        $ownerDisplayName = $owner.DisplayName;\r\n        if (!(Get-PnPMicrosoft365GroupMember -Identity $groupId  -ErrorAction Ignore | Where-Object { $_.DisplayName -eq $owner.DisplayName })) {\r\n            $ExportVw = New-Object PSObject\r\n            $ExportVw | Add-Member -MemberType NoteProperty -name \"Site Name\" -value $siteName\r\n            $ExportVw | Add-Member -MemberType NoteProperty -name \"Site URL\" -value $siteUrl\r\n            $ExportVw | Add-Member -MemberType NoteProperty -name \"Owner Name\" -value $owner.DisplayName\r\n            $m365GroupCollection += $ExportVw\r\n            Add-PnPMicrosoft365GroupMember -Identity $groupId -Users $owner.Email\r\n            Write-host \"$ownerDisplayName has been added as member in $siteUrl\";\r\n      }\r\n   }\r\n}\r\n# Export the result array to CSV file\r\n$m365GroupCollection | sort-object \"Site Name\" | Export-CSV $OutPutView -Force -NoTypeInformation",
+  "SystemPrompt": "You are a helpful analyser of PowerShell scripts that will be used to produce title and description of what the script intended function. Intended to give readers of the PowerShell script, a friendly message to describe what the script is about. The PowerShell scripts can be based on the Microsoft services such as Microsoft 365, SharePoint, Azure, Power Platform, Teams, Security and Compliance. The reponses should be in English and in JSON Format using this example: { \"Title\": \"Title of the Script\", \"Purpose\": \"Purpose of the Script\", \"LongDescription\": \"Describe what Powershell Script does\", \"Dependencies\": [\"Connect-PnPOnline\", \"Get-PnPListItem\"],  \"Assumptions\": [{ \"SourceSitePartURLRequired\": true, \"TenantFilterOptional\": false }]}.   If you don't know the answer, just say that you don't know, don't try to make up an answer",
+  "LocalModelResults": [
+    {
+      "Model": "phi3.5:3.8b-mini-instruct-q4_0",
+      "ModelResultDescription": "{\n  \"Title\": \"Add Members from SharePoint Online Groups\",\n  \"Purpose\": \"The PowerShell script connects to the Microsoft 365 admin center and identifies owners who are not part of specific groups within each site. It then adds these individuals as members in their respective sites.\",\n  \"LongDescription\": \"This PowerShell script is designed for administrators managing SharePoint Online environments under Office 365 administration centers. The primary function involves connecting to the admin center, identifying owners who are not part of designated groups within each site (identified by 'GROUP#0' template), and adding these individuals as members in their respective sites.\",\n  \"Dependencies\": [\"Connect-PnPOnline\", \"Get-PnPTenantSite\", \"Get-PnPMicrosoft365GroupOwner\", \"Add-PnPMicrosoft365GroupMember\"],\n  \"Assumptions\": [\n    {\n      \"SourceSitePartURLRequired\": true,\n      \"TenantFilterOptional\": false\n    }\n  ]\n}\n",
+      "ModelResultObject": {
+        "Title": "Add Members from SharePoint Online Groups",
+        "Purpose": "The PowerShell script connects to the Microsoft 365 admin center and identifies owners who are not part of specific groups within each site. It then adds these individuals as members in their respective sites.",
+        "LongDescription": "This PowerShell script is designed for administrators managing SharePoint Online environments under Office 365 administration centers. The primary function involves connecting to the admin center, identifying owners who are not part of designated groups within each site (identified by 'GROUP#0' template), and adding these individuals as members in their respective sites.",
+        "Dependencies": [
+          "Connect-PnPOnline",
+          "Get-PnPTenantSite",
+          "Get-PnPMicrosoft365GroupOwner",
+          "Add-PnPMicrosoft365GroupMember"
+        ],
+        "Assumptions": [
+          {
+            "SourceSitePartURLRequired": true,
+            "TenantFilterOptional": false
+          }
+        ]
+      },
+      "ExecutionTimeInSeconds": 20.279058,
+      "ModelResponse": {
+        "model": "phi3.5:3.8b-mini-instruct-q4_0",
+        "created_at": "2024-10-27T11:52:43.4532385Z",
+        "response": "{\n  \"Title\": \"Add Members from SharePoint Online Groups\",\n  \"Purpose\": \"The PowerShell script connects to the Microsoft 365 admin center and identifies owners who are not part of specific groups within each site. It then adds these individuals as members in their respective sites.\",\n  \"LongDescription\": \"This PowerShell script is designed for administrators managing SharePoint Online environments under Office 365 administration centers. The primary function involves connecting to the admin center, identifying owners who are not part of designated groups within each site (identified by 'GROUP#0' template), and adding these individuals as members in their respective sites.\",\n  \"Dependencies\": [\"Connect-PnPOnline\", \"Get-PnPTenantSite\", \"Get-PnPMicrosoft365GroupOwner\", \"Add-PnPMicrosoft365GroupMember\"],\n  \"Assumptions\": [\n    {\n      \"SourceSitePartURLRequired\": true,\n      \"TenantFilterOptional\": false\n    }\n  ]\n}\n",
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 18265109000,
+        "load_duration": 5233000,
+        "prompt_eval_count": 872,
+        "prompt_eval_duration": 8342138000,
+        "eval_count": 237,
+        "eval_duration": 9916547000
+      }
+    }
+  ],
+  "Processed": false
+}
