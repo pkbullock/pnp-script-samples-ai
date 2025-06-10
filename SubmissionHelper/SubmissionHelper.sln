@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36109.1 d17.14
+VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubmissionHelper.AppHost", "SubmissionHelper.AppHost\SubmissionHelper.AppHost.csproj", "{5407B39C-9634-48B4-82BF-B879E56A73BD}"
 EndProject
@@ -11,6 +11,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubmissionHelper.Web", "SubmissionHelper.Web\SubmissionHelper.Web.csproj", "{3D4923A6-5C25-BDE6-5111-12673B4E1399}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubmissionHelper.Tests", "SubmissionHelper.Tests\SubmissionHelper.Tests.csproj", "{EB80BE6E-65E3-B170-6DFC-0704860A558C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubmissionHelper.Configuration", "SubmissionHelper.Configuration\SubmissionHelper.Configuration.csproj", "{D428D76C-4D51-4DAC-A3B7-75F25F58D3E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{EB80BE6E-65E3-B170-6DFC-0704860A558C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB80BE6E-65E3-B170-6DFC-0704860A558C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB80BE6E-65E3-B170-6DFC-0704860A558C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D428D76C-4D51-4DAC-A3B7-75F25F58D3E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D428D76C-4D51-4DAC-A3B7-75F25F58D3E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D428D76C-4D51-4DAC-A3B7-75F25F58D3E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D428D76C-4D51-4DAC-A3B7-75F25F58D3E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

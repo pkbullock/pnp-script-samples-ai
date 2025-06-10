@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
 
@@ -13,11 +13,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SubmissionHelper.ApiService\SubmissionHelper.ApiService.csproj" />
+    <ProjectReference Include="..\SubmissionHelper.Configuration\SubmissionHelper.Configuration.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\SubmissionHelper.Web\SubmissionHelper.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Azure.CognitiveServices" Version="9.3.0" />
   </ItemGroup>
 
 </Project>

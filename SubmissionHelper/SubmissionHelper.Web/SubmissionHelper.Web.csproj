@@ -10,4 +10,8 @@
     <ProjectReference Include="..\SubmissionHelper.ServiceDefaults\SubmissionHelper.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApiClients\" />
+  </ItemGroup>
+
 </Project>
