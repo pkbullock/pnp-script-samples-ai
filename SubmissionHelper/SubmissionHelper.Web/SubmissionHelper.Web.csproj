@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SubmissionHelper.ServiceDefaults\SubmissionHelper.ServiceDefaults.csproj" />
+    <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.55.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApiClients\" />
+    <ProjectReference Include="..\SubmissionHelper.ServiceDefaults\SubmissionHelper.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
