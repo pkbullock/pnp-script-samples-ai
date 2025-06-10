@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SubmissionHelper.Configuration\SubmissionHelper.Configuration.csproj" />
+    <ProjectReference Include="..\SubmissionHelper.Configuration\SubmissionHelper.Configuration.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\SubmissionHelper.ServiceDefaults\SubmissionHelper.ServiceDefaults.csproj" />
   </ItemGroup>
 
